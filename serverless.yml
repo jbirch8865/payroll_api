@@ -15,7 +15,7 @@ provider:
       - subnet-0ee565742c26c9143
   environment:
     DB_HOST: ${env:MYSQL_HOST}
-    DB_DATABASE: ${env:MYSQL_DATABASE}
+    DB_DATABASE: PayrollDev
     DB_USERNAME: ${env:MYSQL_USERNAME}
     DB_PASSWORD: ${env:MYSQL_PASSWORD}
     azureClientID: api://1039b1ea-694d-48f0-bc67-90c533b3b570

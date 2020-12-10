@@ -2,6 +2,7 @@
 
 use App\Models\drivetime;
 use App\Models\timecard;
+use App\Models\user_preference;
 use Illuminate\Support\Facades\Route;
 use jbirch8865\AzureAuth\Http\Middleware\AzureAuth;
 
@@ -99,6 +100,26 @@ Route::group([], function () {
         $drivetime->save();
         return response()->json(['message' => 'drivetime updated', 'drivetime' => $drivetime]);
     })->middleware('throttle:200');
+    Route::get('userpreferences', function () {
+        $id = new AzureAuth;
+        $user_pref = user_preference::where('oid',$id->Get_User_Oid(request()))->get();
+        return response()->json(['message' => 'current user preferences', 'userpreferences' => $user_pref]);
+    });
+    Route::post('userpreferences', function () {
+        request()->validate(['preference' => 'required|string|max:255','value' => 'required|string|max:255']);
+        $id = new AzureAuth;
+        $user_pref = new user_preference;
+        $user_pref->preference = request()->input('preference');
+        $user_pref->oid = $id->Get_User_Oid(request());
+        $user_pref->value = request()->input('value');
+        $user_pref->save();
+        return response()->json(['message' => 'current user preferences', 'userpreferences' => $user_pref]);
+    });
+    Route::put('userpreferences/{user_preference}', function (App\Models\user_preference $user_preference) {
+        request()->validate(['value' => 'required|string|max:255']);
+        $user_preference->value = request()->input('value');
+        return response()->json(['message' => 'current user preferences', 'userpreferences' => $user_preference]);
+    });
 });
 
 
@@ -194,6 +215,7 @@ function getGoogleDriveTimes(array $needs) : array
         $drivetime->home_drive_distance = $home_paid_distance_allowable;
         $drivetime->actual_distance = null;
         $drivetime->actual_time = null;
+        $drivetime->justification = "";
         $drivetime->save();
         $driveTimes[] = $drivetime;
     }
