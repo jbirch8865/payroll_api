@@ -16,7 +16,6 @@ class AddGoogleColumns extends Migration
         Schema::table('drivetimes', function (Blueprint $table) {
             $table->float('home_drive_time',8,2);
             $table->float('home_drive_distance',8,2);
-
         });
     }
 
